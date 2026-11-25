@@ -31,8 +31,10 @@ const isVoiceTranscriptionError = Schema.is(VoiceTranscriptionError);
 export function createBrowserVoiceInputPlatform(input: {
   readonly prepared: PreparedConnection;
   readonly cloudProvider?: CloudSpeechProvider | undefined;
-  /** The exact OpenRouter model the grant names; required with that provider. */
+  /** The exact model the grant names; required for OpenRouter and custom endpoints. */
   readonly cloudModel?: CloudSpeechModelId | undefined;
+  /** The custom endpoint base URL the grant consented to. */
+  readonly cloudEndpoint?: string | undefined;
   readonly hasAudioConsent: () => boolean;
   readonly getTranscriptionOptions: () => SpeechTranscriptionOptions;
   readonly getStatusListener?: () => ((status: EnvironmentSpeechStatus) => void) | undefined;
@@ -63,6 +65,7 @@ export function createBrowserVoiceInputPlatform(input: {
                 recordingOptions,
                 input.hasAudioConsent,
                 input.cloudModel,
+                input.cloudEndpoint,
               )
             : transcribeEnvironmentPcm(
                 input.prepared,
